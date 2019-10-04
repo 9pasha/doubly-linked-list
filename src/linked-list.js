@@ -46,7 +46,7 @@ class LinkedList {
     insertAt(index, data) {
         let node = new Node(data);
         let currNode = this._head;
-        let counter = 1;
+        let counter = 0;
 
         while (counter < index) {
             currNode = currNode.next;
@@ -54,10 +54,11 @@ class LinkedList {
         }
 
         if (counter === index) {
-            node.prev = currNode;
-            node.next = currNode.next;
-            currNode.prev = node.prev;
-            currNode.next = node.next;
+            node.prev = currNode.prev;
+            node.next = currNode;
+            currNode.prev = node;
+            node.prev.next = node;
+            this.length++;
         }
     }
 
@@ -71,11 +72,27 @@ class LinkedList {
     }
 
     clear() {
-
+        this._head.data = null;
+        this._head.next = null;
+        this._tail.data = null;
+        this._tail.prev = null;
+        this.length = 0;
     }
 
     deleteAt(index) {
+        let counter = 0;
+        let currNode = this._head;
 
+        while (index < this.length) {
+            if (index === counter) {
+                currNode.prev.next = currNode.next;
+                currNode.next.prev = currNode.prev;
+                this.length--;
+                break;
+            }
+            currNode = currNode.next;
+            counter++;
+        }
     }
 
     reverse() {
@@ -102,7 +119,8 @@ class LinkedList {
 module.exports = LinkedList;
 
 // let list = new LinkedList();
-// list.append(11);
-// list.append(33);
-// list.indexOf(11);
-// list.indexOf(33);
+
+// list.append(32);
+// list.append(47);
+// list.insertAt(1, 34);
+// console.log(list.at(1));
