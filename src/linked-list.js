@@ -21,6 +21,8 @@ class LinkedList {
         }
 
         this.length++;
+
+        return this;
     }
 
     head() {
@@ -53,7 +55,11 @@ class LinkedList {
             counter++;
         }
 
-        if (counter === index) {
+        if (this.length === 0) {
+            this._tail = node;
+            this._head = node;
+        }
+        else if (counter === index) {
             node.prev = currNode.prev;
             node.next = currNode;
             currNode.prev = node;
@@ -77,26 +83,54 @@ class LinkedList {
         this._tail.data = null;
         this._tail.prev = null;
         this.length = 0;
+
+        return this;
     }
 
     deleteAt(index) {
         let counter = 0;
         let currNode = this._head;
 
-        while (index < this.length) {
-            if (index === counter) {
-                currNode.prev.next = currNode.next;
-                currNode.next.prev = currNode.prev;
-                this.length--;
-                break;
-            }
-            currNode = currNode.next;
-            counter++;
+        if (this.length === 1) {
+            this._head.data = null;
+            this._tail.data = null;
         }
+        else {
+            while (index < this.length) {
+                if (index === counter) {
+                    currNode.prev.next = currNode.next;
+                    currNode.next.prev = currNode.prev;
+                    this.length--;
+                    break;
+                }
+                currNode = currNode.next;
+                counter++;
+            }
+        }
+
+        return this;
     }
 
     reverse() {
+        let lowMiddle = Math.floor(this.length / 2);
+        let leftNode = this._head;
+        let rightNode = this._tail;
+        let count = 0;
 
+        if (this.length % 2 === 0) {
+            while (count < lowMiddle) {
+                let leftNodeData = leftNode.data;
+                let rightNodeData = rightNode.data;
+
+                leftNode.data = rightNodeData;
+                rightNode.data = leftNodeData;
+                leftNode = leftNode.next;
+                rightNode = rightNode.prev;
+                count++;
+            }
+        }
+        
+        return this;
     }
 
     indexOf(data) {
@@ -117,10 +151,3 @@ class LinkedList {
 }
 
 module.exports = LinkedList;
-
-// let list = new LinkedList();
-
-// list.append(32);
-// list.append(47);
-// list.insertAt(1, 34);
-// console.log(list.at(1));
